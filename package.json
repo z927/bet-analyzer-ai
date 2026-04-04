@@ -1,10 +1,11 @@
 {
   "name": "bet-analyzer-ai",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.0.1",
+  "description": "Bet Analyzer AI is a Telegram bot that provides users with insights and predictions for sports betting using Google's Generative AI. It analyzes historical data, current trends, and user preferences to offer personalized betting advice.",
+  "main": "dist/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
@@ -13,6 +14,7 @@
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "cors": "^2.8.6",
+    "express-actuator": "^1.8.4",
     "express": "^5.2.1",
     "multer": "^2.1.1",
     "node-telegram-bot-api": "^0.67.0"
@@ -21,6 +23,17 @@
     "@types/express": "^5.0.6",
     "@types/multer": "^2.1.0",
     "@types/node": "^25.5.2",
-    "@types/node-telegram-bot-api": "^0.64.14"
+    "@types/node-telegram-bot-api": "^0.64.14",
+    "@types/async-retry": "^1.4.9",
+    "@types/express-actuator": "^1.8.3",
+    "@types/jest": "^30.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.12.0",
+    "@typescript-eslint/parser": "^5.12.0",
+    "eslint": "^8.57.1",
+    "eslint-config-google": "^0.14.0",
+    "eslint-plugin-import": "^2.25.4",
+    "jest": "^30.2.0",
+    "ts-jest": "^29.4.6",
+    "typescript": "^5.9.3"
   }
 }
