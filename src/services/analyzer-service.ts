@@ -11,7 +11,8 @@ export const analyzeBet = async (
   mimeType: string
 ) => {
   try {
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+    console.log(process.env.AI_API_KEY);
+    const genAI = new GoogleGenerativeAI(process.env.AI_API_KEY || "");
 
     // 1. Model setup
     const model: GenerativeModel = genAI.getGenerativeModel({
@@ -46,7 +47,7 @@ const getPrompt = (): string | null => {
     }
     return null;
   } catch (e) {
-    console.error("Errore reading prompt:", e);
+    console.error("Errore reading prompt: ", e);
     throw new Error("Prompt file not found or unreadable.");
   }
 };

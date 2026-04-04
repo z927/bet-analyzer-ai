@@ -1,0 +1,81 @@
+openapi: 3.0.3
+info:
+  title: Bet Analyzer AI API
+  description: API per l'analisi delle scommesse tramite AI e monitoraggio del sistema.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080
+    description: Server locale di sviluppo
+
+paths:
+  /api/analyze-bet:
+    post:
+      summary: Analizza una scommessa tramite file
+      description: Carica un file (es. screenshot o documento) e specifica il tipo di canale.
+      operationId: analyzeBet
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - file
+                - channel
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Il file della scommessa da analizzare (JPG, PNG, PDF).
+                channel:
+                  type: string
+                  enum: [public, premium]
+                  description: Il livello di priorità/canale dell'analisi.
+      responses:
+        "200":
+          description: Analisi completata con successo
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AnalysisResponse"
+        "400":
+          description: Errore nei parametri di input (file mancante o canale errato)
+        "500":
+          description: Errore interno del server AI
+
+  /health:
+    get:
+      summary: Stato di salute del servizio
+      tags:
+        - Actuator
+      responses:
+        "200":
+          description: Il servizio è attivo
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: UP
+
+components:
+  schemas:
+    AnalysisResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        prediction:
+          type: string
+          description: Il risultato dell'analisi AI
+        confidence:
+          type: number
+          format: float
+          example: 0.95
+        timestamp:
+          type: string
+          format: date-time

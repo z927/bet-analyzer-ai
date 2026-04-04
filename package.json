@@ -4,36 +4,50 @@
   "description": "Bet Analyzer AI is a Telegram bot that provides users with insights and predictions for sports betting using Google's Generative AI. It analyzes historical data, current trends, and user preferences to offer personalized betting advice.",
   "main": "dist/server.js",
   "scripts": {
+    "swagger-generate": "npx openapi-typescript ./src/resources/openapi.yaml -o ./src/types/schema.d.ts",
+    "lint": "eslint --ext .js,.ts .",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "prestart": "npm run build",
+    "start": "node dist/server.js",
+    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/server.ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "zasi.dev",
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
     "@google/generative-ai": "^0.24.1",
     "cors": "^2.8.6",
-    "express-actuator": "^1.8.4",
+    "dotenv": "^17.4.0",
     "express": "^5.2.1",
+    "express-actuator": "^1.8.4",
     "multer": "^2.1.1",
-    "node-telegram-bot-api": "^0.67.0"
+    "node-telegram-bot-api": "^0.67.0",
+    "nodemon": "^3.1.14",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
+    "@types/async-retry": "^1.4.9",
     "@types/express": "^5.0.6",
+    "@types/express-actuator": "^1.8.3",
+    "@types/jest": "^30.0.0",
     "@types/multer": "^2.1.0",
     "@types/node": "^25.5.2",
     "@types/node-telegram-bot-api": "^0.64.14",
-    "@types/async-retry": "^1.4.9",
-    "@types/express-actuator": "^1.8.3",
-    "@types/jest": "^30.0.0",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
+    "@types/yamljs": "^0.2.34",
     "@typescript-eslint/eslint-plugin": "^5.12.0",
     "@typescript-eslint/parser": "^5.12.0",
     "eslint": "^8.57.1",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-import": "^2.25.4",
     "jest": "^30.2.0",
+    "openapi-typescript": "^7.13.0",
     "ts-jest": "^29.4.6",
+    "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }
 }

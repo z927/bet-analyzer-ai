@@ -9,6 +9,7 @@ FROM node:20-slim
 WORKDIR /app
 ENV NODE_ENV=production
 COPY package*.json ./
+COPY openapi.yaml ./
 RUN npm install --only=production
 COPY --from=builder /app/dist ./dist
 

@@ -1,27 +1,29 @@
 import { Router, Request, Response } from "express";
-import multer from "multer";
 import { analyzeBet } from "../services/analyzer-service";
+import multer from "multer";
+import "dotenv/config";
 
 const upload = multer({ dest: "uploads/" });
-const router = Router();
+const analyzeRouter = Router();
 
-router.post(
-  "/analize-bet",
+analyzeRouter.post(
+  "/analyze-bet",
   upload.single("bet"),
   async (req: Request, res: Response) => {
     try {
+      console.log("Received file: ", req.file);
       if (!req.file) {
         return res.status(400).json({ error: "File mancante." });
       }
 
-      analyzeBet("public", req.file.path, req.file.mimetype);
+      await analyzeBet("public", req.file.path, req.file.mimetype);
 
-      return res.json({ success: true, message: "Schedina inviata!" });
+      return res.status(200).json({ success: true, message: "Bet Analyzed!" });
     } catch (error) {
-      console.error("Errore nel router:", error);
+      console.error("Errore nel router: ", error);
       return res.status(500).json({ error: "Errore interno." });
     }
   }
 );
 
-export default Router;
+export default analyzeRouter;
