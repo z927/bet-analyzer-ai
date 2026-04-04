@@ -1,0 +1,51 @@
+name: Build and Deploy to Cloud Run
+
+on:
+  push:
+    branches: ["main"]
+
+env:
+  PROJECT_ID: il-tuo-project-id
+  REGION: europe-west1
+  SERVICE_NAME: la-tua-app-typescript
+  GAR_LOCATION: europe-west1-docker.pkg.dev/il-tuo-project-id/my-repo/app-image
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - id: "auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v2"
+        with:
+          workload_identity_provider: "projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider"
+          service_account: "my-service-account@il-tuo-project-id.iam.gserviceaccount.com"
+
+      - name: Docker Auth
+        run: |-
+          gcloud auth configure-docker europe-west1-docker.pkg.dev --quiet
+
+      - name: Build and Push Container
+        run: |-
+          docker build -t ${{ env.GAR_LOCATION }}:${{ github.sha }} .
+          docker push ${{ env.GAR_LOCATION }}:${{ github.sha }}
+
+      - name: Deploy to Cloud Run
+        id: deploy
+        uses: "google-github-actions/deploy-cloudrun@v2"
+        with:
+          service: ${{ env.SERVICE_NAME }}
+          region: ${{ env.REGION }}
+          image: ${{ env.GAR_LOCATION }}:${{ github.sha }}
+          flags: "--allow-unauthenticated"
+
+      - name: Show Output
+        run: echo ${{ steps.deploy.outputs.url }}
