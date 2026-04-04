@@ -4,25 +4,11 @@ A Node.js/TypeScript backend that leverages Google Gemini 2.5 Flash to extract b
 
 ## 🚀 Features
 
-### OCR & AI Analysis
-
-- Uses Gemini 2.5 Flash to accurately read match details, odds, and potential winnings from photos.
-
-### Modular Architecture
-
-- Clean separation between the main server logic and the API routing.
-
-### Dynamic System Prompt
-
-- Customize the AI behavior and message style via a dedicated Markdown file without changing the code.
-
-### Telegram Integration
-
-- Instant reporting to your chosen Telegram channel using a Bot.
-
-### TypeScript Core
-
-- Fully typed for better reliability and maintenance.
+- **OCR & AI Analysis**: Uses Gemini 2.5 Flash to accurately read match details, odds, and potential winnings from photos.
+- **Modular Architecture**: Clean separation between the main server logic and the API routing.
+- **Dynamic System Prompt**: Customize the AI behavior and message style via a dedicated Markdown file without changing the code.
+- **Telegram Integration**: Instant reporting to your chosen Telegram channel using a Bot.
+- **TypeScript Core**: Fully typed for better reliability and maintenance.
 
 ## 🛠 Prerequisites
 
