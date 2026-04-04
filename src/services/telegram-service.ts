@@ -8,7 +8,7 @@ export const sendMessage = async (channelType: ChannelType, text: string) => {
 
   const channelId = chooseChannel(channelType);
 
-  await bot.sendMessage(channelId, text, { parse_mode: "Markdown" });
+  await bot.sendMessage(channelId ?? "", text, { parse_mode: "Markdown" });
 };
 
 const chooseChannel = (channelType: ChannelType): string | undefined => {
@@ -18,4 +18,5 @@ const chooseChannel = (channelType: ChannelType): string | undefined => {
   if (channelType === "premium") {
     return process.env.TELEGRAM_VIP_CHANNEL_ID || "";
   }
+  throw new Error("Invalid channel type provided.");
 };

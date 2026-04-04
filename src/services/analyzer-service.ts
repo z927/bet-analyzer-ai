@@ -1,6 +1,6 @@
-import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
 import fs from "fs";
 import path from "path";
+import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
 import { fileToGenerativePart } from "../utils/file-utils";
 import { sendMessage } from "./telegram-service";
 import { ChannelType } from "../types/common";
@@ -11,9 +11,11 @@ export const analyzeBet = async (
   mimeType: string
 ) => {
   try {
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+
     // 1. Model setup
     const model: GenerativeModel = genAI.getGenerativeModel({
-      model: process.env.AI_MODEL_TYPE,
+      model: process.env.AI_MODEL_TYPE ?? "",
     });
 
     // 2. Data Prep for AI
@@ -35,13 +37,14 @@ export const analyzeBet = async (
   }
 };
 
-const getPrompt = (): string | undefined => {
+const getPrompt = (): string | null => {
   try {
     const PROMPT_PATH = path.join(__dirname, "prompts", "bet_instructions.md");
 
     if (fs.existsSync(PROMPT_PATH)) {
       return fs.readFileSync(PROMPT_PATH, "utf-8");
     }
+    return null;
   } catch (e) {
     console.error("Errore reading prompt:", e);
     throw new Error("Prompt file not found or unreadable.");
