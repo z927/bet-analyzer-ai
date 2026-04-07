@@ -6,3 +6,6 @@ dist/
 
 # Ignore environment variable files
 .env
+
+# Ignore IDE specific files
+.vscode/

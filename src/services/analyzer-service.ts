@@ -1,15 +1,10 @@
 import fs from "fs";
 import path from "path";
 import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
-import { fileToGenerativePart } from "../utils/file-utils";
 import { sendMessage } from "./telegram-service";
 import { ChannelType } from "../types/common";
 
-export const analyzeBet = async (
-  channelType: ChannelType,
-  filePath: string,
-  mimeType: string
-) => {
+export const analyzeBet = async (channelType: ChannelType, buffer: Buffer) => {
   try {
     console.log(process.env.AI_API_KEY);
     const genAI = new GoogleGenerativeAI(process.env.AI_API_KEY || "");
@@ -21,7 +16,8 @@ export const analyzeBet = async (
 
     // 2. Data Prep for AI
     const prompt = getPrompt();
-    const imagePart = fileToGenerativePart(filePath, mimeType);
+
+    const imagePart = buffer.toString("base64");
 
     // 3. Api Call
     const result = await model.generateContent([prompt ?? "", imagePart]);
@@ -30,11 +26,9 @@ export const analyzeBet = async (
 
     // 4. Send to Telegram
     await sendMessage(channelType, text);
-
-    // 5. Cleanup
-    fs.unlinkSync(filePath);
   } catch (error) {
     console.error("Errore during analysis: ", error);
+    throw new Error("Failed to analyze bet.");
   }
 };
 

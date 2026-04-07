@@ -3,7 +3,9 @@ import { analyzeBet } from "../services/analyzer-service";
 import multer from "multer";
 import "dotenv/config";
 
-const upload = multer({ dest: "uploads/" });
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
 const analyzeRouter = Router();
 
 analyzeRouter.post(
@@ -16,7 +18,7 @@ analyzeRouter.post(
         return res.status(400).json({ error: "File mancante." });
       }
 
-      await analyzeBet("public", req.file.path, req.file.mimetype);
+      await analyzeBet("public", req.file.buffer);
 
       return res.status(200).json({ success: true, message: "Bet Analyzed!" });
     } catch (error) {
