@@ -1,6 +1,7 @@
 import express from "express";
 import actuator from "express-actuator";
 import analyzeRouter from "./routes/analyzer-route";
+import telegramRouter from "./routes/telegram-router";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 import path from "path";
@@ -14,6 +15,7 @@ const app = express();
 app.use(express.json());
 app.use(actuator());
 app.use("/api", analyzeRouter);
+app.use("/api", telegramRouter);
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(PORT, () => {

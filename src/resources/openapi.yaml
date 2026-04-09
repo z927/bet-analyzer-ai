@@ -44,6 +44,39 @@ paths:
         "500":
           description: Errore interno del server AI
 
+  /api/telegram-router:
+    post:
+      summary: Invia un messaggio a un canale Telegram
+      description: Invia un messaggio al canale Telegram selezionato tramite query string.
+      operationId: sendTelegramMessage
+      parameters:
+        - in: query
+          name: channel
+          required: true
+          schema:
+            type: string
+            enum: [public, premium]
+          description: Il canale Telegram di destinazione.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - message
+              properties:
+                message:
+                  type: string
+                  description: Il testo del messaggio da inviare.
+      responses:
+        "200":
+          description: Messaggio inviato con successo
+        "400":
+          description: Parametri non validi
+        "500":
+          description: Errore interno del server
+
   /health:
     get:
       summary: Stato di salute del servizio

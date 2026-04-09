@@ -1,5 +1,16 @@
 import TelegramBot from "node-telegram-bot-api";
 import { ChannelType } from "../types/common";
+import { parseChannel, parseMessage } from "../utils/validator";
+
+export const sendTelegramChannelMessage = async (
+  channel: unknown,
+  message: unknown
+) => {
+  const channelType = parseChannel(channel);
+  const text = parseMessage(message);
+
+  await sendMessage(channelType, text);
+};
 
 export const sendMessage = async (channelType: ChannelType, text: string) => {
   try {
@@ -12,6 +23,7 @@ export const sendMessage = async (channelType: ChannelType, text: string) => {
     await bot.sendMessage(channelId ?? "", text, { parse_mode: "Markdown" });
   } catch (error) {
     console.error("Error sending message to Telegram: ", error);
+    throw new Error("Unable to send message to Telegram.");
   }
 };
 
