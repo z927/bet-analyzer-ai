@@ -1,14 +1,6 @@
 import TelegramBot from "node-telegram-bot-api";
 import { ChannelType } from "../types/common";
-
-class TelegramValidationError extends Error {
-  statusCode: number;
-
-  constructor(message: string, statusCode = 400) {
-    super(message);
-    this.statusCode = statusCode;
-  }
-}
+import { parseChannel, parseMessage } from "../utils/validator";
 
 export const sendTelegramChannelMessage = async (
   channel: unknown,
@@ -33,30 +25,6 @@ export const sendMessage = async (channelType: ChannelType, text: string) => {
     console.error("Error sending message to Telegram: ", error);
     throw new Error("Unable to send message to Telegram.");
   }
-};
-
-export const isTelegramValidationError = (
-  error: unknown
-): error is TelegramValidationError => {
-  return error instanceof TelegramValidationError;
-};
-
-const parseChannel = (channel: unknown): ChannelType => {
-  if (channel === "public" || channel === "premium") {
-    return channel;
-  }
-
-  throw new TelegramValidationError(
-    "Invalid channel query parameter. Use 'public' or 'premium'."
-  );
-};
-
-const parseMessage = (message: unknown): string => {
-  if (typeof message === "string" && message.trim().length > 0) {
-    return message;
-  }
-
-  throw new TelegramValidationError("Message is required in request body.");
 };
 
 const chooseChannel = (channelType: ChannelType): string | undefined => {

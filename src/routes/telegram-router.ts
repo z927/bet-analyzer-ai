@@ -1,8 +1,6 @@
 import { Router, Request, Response } from "express";
-import {
-  sendTelegramChannelMessage,
-  isTelegramValidationError,
-} from "../services/telegram-service";
+import { sendTelegramChannelMessage } from "../services/telegram-service";
+import { isTelegramValidationError } from "../utils/validator";
 
 const telegramRouter = Router();
 
