@@ -6,7 +6,7 @@
   "scripts": {
     "swagger-generate": "npx openapi-typescript ./src/resources/openapi.yaml -o ./src/types/schema.d.ts",
     "lint": "eslint --ext .js,.ts .",
-    "build": "tsc",
+    "build": "tsc && copyfiles -u 1 src/resources/**/* dist/",
     "prestart": "npm run build",
     "start": "node dist/server.js",
     "debug": "npm run build && node --inspect dist/server.js",
@@ -25,6 +25,7 @@
     "multer": "^2.1.1",
     "node-telegram-bot-api": "^0.67.0",
     "nodemon": "^3.1.14",
+    "save-dev": "^0.0.1-security",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
     "yamljs": "^0.3.0"
@@ -42,6 +43,7 @@
     "@types/yamljs": "^0.2.34",
     "@typescript-eslint/eslint-plugin": "^5.12.0",
     "@typescript-eslint/parser": "^5.12.0",
+    "copyfiles": "^2.4.1",
     "eslint": "^8.57.1",
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-import": "^2.25.4",

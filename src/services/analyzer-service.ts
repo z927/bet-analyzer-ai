@@ -34,7 +34,12 @@ export const analyzeBet = async (channelType: ChannelType, buffer: Buffer) => {
 
 const getPrompt = (): string | null => {
   try {
-    const PROMPT_PATH = path.join(__dirname, "prompts", "bet_instructions.md");
+    const PROMPT_PATH = path.join(
+      __dirname,
+      "..",
+      "prompts",
+      "bet_instructions.md"
+    );
 
     if (fs.existsSync(PROMPT_PATH)) {
       return fs.readFileSync(PROMPT_PATH, "utf-8");
