@@ -9,18 +9,19 @@ const upload = multer({ storage: storage });
 const analyzeRouter = Router();
 
 analyzeRouter.post(
-  "/analyze-bet",
+  "/bet",
   upload.single("bet"),
   async (req: Request, res: Response) => {
     try {
       console.log("Received file: ", req.file);
+
       if (!req.file) {
         return res.status(400).json({ error: "File mancante." });
       }
 
-      await analyzeBet("public", req.file.buffer);
+      const text = await analyzeBet(req.file.buffer, req.file.mimetype);
 
-      return res.status(200).json({ success: true, message: "Bet Analyzed!" });
+      return res.status(200).json({ success: true, message: text });
     } catch (error) {
       console.error("Errore nel router: ", error);
       return res.status(500).json({ error: "Errore interno." });

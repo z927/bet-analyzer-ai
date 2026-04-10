@@ -14,8 +14,8 @@ const app = express();
 
 app.use(express.json());
 app.use(actuator());
-app.use("/api", analyzeRouter);
-app.use("/api", telegramRouter);
+app.use("/api/analyzer", analyzeRouter);
+app.use("/api/telegram", telegramRouter);
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(PORT, () => {
