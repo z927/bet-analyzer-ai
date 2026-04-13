@@ -1,8 +1,12 @@
 import fs from "fs";
 import path from "path";
 import { GoogleGenerativeAI, GenerativeModel } from "@google/generative-ai";
+import { AnalyzerOutput } from "../types/common";
 
-export const analyzeBet = async (buffer: Buffer, mimeType: string) => {
+export const analyzeBet = async (
+  buffer: Buffer,
+  mimeType: string
+): Promise<AnalyzerOutput> => {
   try {
     console.log(process.env.AI_API_KEY);
     const genAI = new GoogleGenerativeAI(process.env.AI_API_KEY || "");
@@ -28,7 +32,7 @@ export const analyzeBet = async (buffer: Buffer, mimeType: string) => {
     const text = response.text();
     console.log("AI Response: ", text);
 
-    return text;
+    return extractJsonObject(text);
   } catch (error) {
     console.error("Errore during analysis: ", error);
     throw new Error("Failed to analyze bet.");
@@ -53,4 +57,45 @@ const getPrompt = (): string | null => {
     console.error("Errore reading prompt: ", e);
     throw new Error("Prompt file not found or unreadable.");
   }
+};
+
+const extractJsonObject = (text: string): AnalyzerOutput => {
+  const cleanedText = text.trim().replace(/^```json\s*/i, "").replace(/```$/i, "");
+
+  try {
+    const parsedJson = JSON.parse(cleanedText) as AnalyzerOutput;
+
+    if (!isAnalyzerOutput(parsedJson)) {
+      throw new Error("Model returned an unexpected schema.");
+    }
+
+    return parsedJson;
+  } catch {
+    throw new Error("Model did not return valid JSON.");
+  }
+};
+
+const isAnalyzerOutput = (data: unknown): data is AnalyzerOutput => {
+  if (!data || typeof data !== "object") {
+    return false;
+  }
+
+  const parsedData = data as AnalyzerOutput;
+
+  return (
+    typeof parsedData.bookmaker === "string" &&
+    typeof parsedData.date === "string" &&
+    typeof parsedData.stake === "string" &&
+    typeof parsedData.potentialWin === "string" &&
+    typeof parsedData.totalOdds === "string" &&
+    typeof parsedData.status === "string" &&
+    Array.isArray(parsedData.selections) &&
+    parsedData.selections.every(
+      (item) =>
+        typeof item.event === "string" &&
+        typeof item.selection === "string" &&
+        typeof item.odds === "string" &&
+        typeof item.result === "string"
+    )
+  );
 };
