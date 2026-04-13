@@ -4,7 +4,7 @@ import { isTelegramValidationError } from "../utils/validator";
 
 const telegramRouter = Router();
 
-telegramRouter.post("/telegram-router", async (req: Request, res: Response) => {
+telegramRouter.post("/send-message", async (req: Request, res: Response) => {
   try {
     await sendTelegramChannelMessage(req.query.channel, req.body);
 
@@ -20,7 +20,7 @@ telegramRouter.post("/telegram-router", async (req: Request, res: Response) => {
       });
     }
 
-    console.error("Telegram router error:", error);
+    console.error("Telegram router error: ", error);
     return res.status(500).json({
       success: false,
       error: "Internal server error.",
