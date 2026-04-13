@@ -1,4 +1,4 @@
-import { ChannelType } from "../types/common";
+import { AnalyzerOutput, ChannelType } from "../types/common";
 
 export class TelegramValidationError extends Error {
   statusCode: number;
@@ -25,10 +25,36 @@ export const parseChannel = (channel: unknown): ChannelType => {
   );
 };
 
-export const parseMessage = (message: unknown): string => {
-  if (typeof message === "string" && message.trim().length > 0) {
-    return message;
+export const parseAnalyzerOutput = (payload: unknown): AnalyzerOutput => {
+  const parsedPayload = payload as AnalyzerOutput;
+
+  if (
+    typeof payload === "object" &&
+    payload !== null &&
+    typeof parsedPayload.bookmaker === "string" &&
+    typeof parsedPayload.date === "string" &&
+    typeof parsedPayload.stake === "string" &&
+    typeof parsedPayload.potentialWin === "string" &&
+    typeof parsedPayload.totalOdds === "string" &&
+    typeof parsedPayload.status === "string" &&
+    Array.isArray(parsedPayload.selections) &&
+    parsedPayload.selections.every(isAnalyzerSelection)
+  ) {
+    return parsedPayload;
   }
 
-  throw new TelegramValidationError("Message is required in request body.");
+  throw new TelegramValidationError(
+    "AnalyzerOutput payload is required in request body."
+  );
+};
+
+const isAnalyzerSelection = (
+  selection: AnalyzerOutput["selections"][number]
+): boolean => {
+  return (
+    typeof selection.event === "string" &&
+    typeof selection.selection === "string" &&
+    typeof selection.odds === "string" &&
+    typeof selection.result === "string"
+  );
 };
