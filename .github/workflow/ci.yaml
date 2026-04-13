@@ -1,15 +1,18 @@
-name: Release with Conventional Commits
+name: Release & Tagging
 
 on:
   push:
     branches:
       - main
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   release:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
 
     steps:
       - name: Checkout
@@ -17,11 +20,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Github Tag Bump
-        id: tagger
-        uses: anothrNick/github-tag-action@1.67.0
+      - name: Lint Conventional Commits
+        if: github.event_name == 'pull_request'
+        uses: wagoid/commitlint-github-action@v5
+
+      - name: Semantic Release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: cycjimmy/semantic-release-action@v4
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: true
-          DEFAULT_BUMP: patch
-          RELEASE_BRANCHES: main
