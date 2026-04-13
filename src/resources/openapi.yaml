@@ -47,7 +47,7 @@ paths:
   /api/telegram-router:
     post:
       summary: Invia un messaggio a un canale Telegram
-      description: Invia un messaggio al canale Telegram selezionato tramite query string.
+      description: Invia al canale Telegram selezionato un messaggio formattato partendo da un AnalyzerOutput.
       operationId: sendTelegramMessage
       parameters:
         - in: query
@@ -62,13 +62,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - message
-              properties:
-                message:
-                  type: string
-                  description: Il testo del messaggio da inviare.
+              $ref: "#/components/schemas/AnalyzerOutput"
       responses:
         "200":
           description: Messaggio inviato con successo
@@ -96,6 +90,49 @@ paths:
 
 components:
   schemas:
+    AnalyzerSelection:
+      type: object
+      required:
+        - event
+        - selection
+        - odds
+        - result
+      properties:
+        event:
+          type: string
+        selection:
+          type: string
+        odds:
+          type: string
+        result:
+          type: string
+    AnalyzerOutput:
+      type: object
+      required:
+        - bookmaker
+        - date
+        - stake
+        - potentialWin
+        - totalOdds
+        - status
+        - selections
+      properties:
+        bookmaker:
+          type: string
+        date:
+          type: string
+        stake:
+          type: string
+        potentialWin:
+          type: string
+        totalOdds:
+          type: string
+        status:
+          type: string
+        selections:
+          type: array
+          items:
+            $ref: "#/components/schemas/AnalyzerSelection"
     AnalysisResponse:
       type: object
       properties:

@@ -6,7 +6,7 @@ const telegramRouter = Router();
 
 telegramRouter.post("/telegram-router", async (req: Request, res: Response) => {
   try {
-    await sendTelegramChannelMessage(req.query.channel, req.body?.message);
+    await sendTelegramChannelMessage(req.query.channel, req.body);
 
     return res.status(200).json({
       success: true,

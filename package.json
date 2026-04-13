@@ -4,6 +4,7 @@
   "description": "Bet Analyzer AI is a Telegram bot that provides users with insights and predictions for sports betting using Google's Generative AI. It analyzes historical data, current trends, and user preferences to offer personalized betting advice.",
   "main": "dist/server.js",
   "scripts": {
+    "test": "jest",
     "swagger-generate": "npx openapi-typescript ./src/resources/openapi.yaml -o ./src/types/schema.d.ts",
     "lint": "eslint --ext .js,.ts .",
     "build": "tsc && copyfiles -u 1 src/resources/**/* dist/",
