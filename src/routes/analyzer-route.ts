@@ -1,8 +1,10 @@
 import { Router, Request, Response } from "express";
 import { analyzeBet } from "../services/analyzer-service";
+import { sendTelegramChannelMessageWithImage } from "../services/telegram-service";
 import multer from "multer";
 import "dotenv/config";
 import { AnalyzerOutput } from "../types/common";
+import { isTelegramValidationError } from "../utils/validator";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -22,8 +24,19 @@ analyzeRouter.post(
 
       const analysis = await analyzeBet(req.file.buffer, req.file.mimetype);
 
+      await sendTelegramChannelMessageWithImage(
+        req.query.channel,
+        analysis,
+        req.file.buffer,
+        req.file.mimetype
+      );
+
       return res.status(200).json(analysis);
     } catch (error) {
+      if (isTelegramValidationError(error)) {
+        return res.status(error.statusCode).json({ error: error.message });
+      }
+
       console.error("Errore nel router: ", error);
       return res.status(500).json({ error: "Errore interno." });
     }
