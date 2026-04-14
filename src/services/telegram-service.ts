@@ -13,6 +13,19 @@ export const sendTelegramChannelMessage = async (
   await sendMessage(channelType, text);
 };
 
+export const sendTelegramChannelMessageWithImage = async (
+  channel: unknown,
+  analyzerOutput: unknown,
+  imageBuffer: Buffer,
+  mimeType: string
+) => {
+  const channelType = parseChannel(channel);
+  const parsedOutput = parseAnalyzerOutput(analyzerOutput);
+  const text = formatTelegramMessage(parsedOutput);
+
+  await sendImage(channelType, imageBuffer, mimeType, text);
+};
+
 export const formatTelegramMessage = (output: AnalyzerOutput): string => {
   const selectionsText = output.selections
     .map((selection, index) =>
@@ -52,6 +65,30 @@ export const sendMessage = async (channelType: ChannelType, text: string) => {
   } catch (error) {
     console.error("Error sending message to Telegram: ", error);
     throw new Error("Unable to send message to Telegram.");
+  }
+};
+
+export const sendImage = async (
+  channelType: ChannelType,
+  imageBuffer: Buffer,
+  mimeType: string,
+  caption?: string
+) => {
+  try {
+    const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN || "", {
+      polling: false,
+    });
+
+    const channelId = chooseChannel(channelType);
+
+    await bot.sendPhoto(channelId ?? "", imageBuffer, {
+      contentType: mimeType,
+      caption: caption ?? "📸 Schedina originale",
+      parse_mode: "Markdown",
+    });
+  } catch (error) {
+    console.error("Error sending image to Telegram: ", error);
+    throw new Error("Unable to send image to Telegram.");
   }
 };
 
