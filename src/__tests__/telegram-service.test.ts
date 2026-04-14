@@ -49,13 +49,20 @@ describe("sendImage", () => {
     const sendPhoto = jest.fn().mockResolvedValue(undefined);
     mockedTelegramBot.mockImplementation(() => ({ sendPhoto }));
 
-    await sendImage("public", Buffer.from("img"), "image/png");
+    await sendImage(
+      "public",
+      Buffer.from("img"),
+      "image/png",
+      "*caption markdown*"
+    );
 
     expect(sendPhoto).toHaveBeenCalledWith(
       "@public_channel",
       expect.any(Buffer),
       expect.objectContaining({
         contentType: "image/png",
+        caption: "*caption markdown*",
+        parse_mode: "Markdown",
       })
     );
   });
@@ -68,7 +75,7 @@ describe("sendTelegramChannelMessageWithImage", () => {
     process.env.TELEGRAM_BOT_TOKEN = "token";
   });
 
-  it("sends both message and image", async () => {
+  it("sends a single post with image and caption", async () => {
     const sendMessage = jest.fn().mockResolvedValue(undefined);
     const sendPhoto = jest.fn().mockResolvedValue(undefined);
     mockedTelegramBot.mockImplementation(() => ({ sendMessage, sendPhoto }));
@@ -97,7 +104,16 @@ describe("sendTelegramChannelMessageWithImage", () => {
       "image/jpeg"
     );
 
-    expect(sendMessage).toHaveBeenCalledTimes(1);
+    expect(sendMessage).toHaveBeenCalledTimes(0);
     expect(sendPhoto).toHaveBeenCalledTimes(1);
+
+    expect(sendPhoto).toHaveBeenCalledWith(
+      "@public_channel",
+      expect.any(Buffer),
+      expect.objectContaining({
+        parse_mode: "Markdown",
+        caption: expect.stringContaining("🎯 *Giocata del giorno*"),
+      })
+    );
   });
 });

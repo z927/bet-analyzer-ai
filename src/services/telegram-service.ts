@@ -23,8 +23,7 @@ export const sendTelegramChannelMessageWithImage = async (
   const parsedOutput = parseAnalyzerOutput(analyzerOutput);
   const text = formatTelegramMessage(parsedOutput);
 
-  await sendMessage(channelType, text);
-  await sendImage(channelType, imageBuffer, mimeType);
+  await sendImage(channelType, imageBuffer, mimeType, text);
 };
 
 export const formatTelegramMessage = (output: AnalyzerOutput): string => {
@@ -72,7 +71,8 @@ export const sendMessage = async (channelType: ChannelType, text: string) => {
 export const sendImage = async (
   channelType: ChannelType,
   imageBuffer: Buffer,
-  mimeType: string
+  mimeType: string,
+  caption?: string
 ) => {
   try {
     const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN || "", {
@@ -83,7 +83,8 @@ export const sendImage = async (
 
     await bot.sendPhoto(channelId ?? "", imageBuffer, {
       contentType: mimeType,
-      caption: "📸 Schedina originale",
+      caption: caption ?? "📸 Schedina originale",
+      parse_mode: "Markdown",
     });
   } catch (error) {
     console.error("Error sending image to Telegram: ", error);
