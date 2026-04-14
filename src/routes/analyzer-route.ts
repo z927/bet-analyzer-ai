@@ -1,9 +1,9 @@
 import { Router, Request, Response } from "express";
 import { analyzeBet } from "../services/analyzer-service";
-import { sendTelegramChannelMessageWithImage } from "../services/telegram-service";
+import { sendTelegramChannelMessage } from "../services/telegram-service";
 import multer from "multer";
 import "dotenv/config";
-import { AnalyzerOutput } from "../types/common";
+import { AnalyzerOutput, ChannelType } from "../types/common";
 import { isTelegramValidationError } from "../utils/validator";
 
 const storage = multer.memoryStorage();
@@ -24,11 +24,10 @@ analyzeRouter.post(
 
       const analysis = await analyzeBet(req.file.buffer, req.file.mimetype);
 
-      await sendTelegramChannelMessageWithImage(
-        req.query.channel,
+      await sendTelegramChannelMessage(
+        req.query.channel as ChannelType,
         analysis,
-        req.file.buffer,
-        req.file.mimetype
+        req.file.buffer
       );
 
       return res.status(200).json(analysis);

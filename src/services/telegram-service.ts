@@ -3,27 +3,15 @@ import { AnalyzerOutput, ChannelType } from "../types/common";
 import { parseAnalyzerOutput, parseChannel } from "../utils/validator";
 
 export const sendTelegramChannelMessage = async (
-  channel: unknown,
-  analyzerOutput: unknown
-) => {
-  const channelType = parseChannel(channel);
-  const parsedOutput = parseAnalyzerOutput(analyzerOutput);
-  const text = formatTelegramMessage(parsedOutput);
-
-  await sendMessage(channelType, text);
-};
-
-export const sendTelegramChannelMessageWithImage = async (
-  channel: unknown,
+  channel: ChannelType,
   analyzerOutput: unknown,
-  imageBuffer: Buffer,
-  mimeType: string
+  imageBuffer: Buffer
 ) => {
   const channelType = parseChannel(channel);
   const parsedOutput = parseAnalyzerOutput(analyzerOutput);
   const text = formatTelegramMessage(parsedOutput);
 
-  await sendImage(channelType, imageBuffer, mimeType, text);
+  await sendImage(channelType, imageBuffer, text);
 };
 
 export const formatTelegramMessage = (output: AnalyzerOutput): string => {
@@ -53,25 +41,9 @@ export const formatTelegramMessage = (output: AnalyzerOutput): string => {
   ].join("\n");
 };
 
-export const sendMessage = async (channelType: ChannelType, text: string) => {
-  try {
-    const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN || "", {
-      polling: false,
-    });
-
-    const channelId = chooseChannel(channelType);
-
-    await bot.sendMessage(channelId ?? "", text, { parse_mode: "Markdown" });
-  } catch (error) {
-    console.error("Error sending message to Telegram: ", error);
-    throw new Error("Unable to send message to Telegram.");
-  }
-};
-
 export const sendImage = async (
   channelType: ChannelType,
   imageBuffer: Buffer,
-  mimeType: string,
   caption?: string
 ) => {
   try {
@@ -82,12 +54,11 @@ export const sendImage = async (
     const channelId = chooseChannel(channelType);
 
     await bot.sendPhoto(channelId ?? "", imageBuffer, {
-      contentType: mimeType,
       caption: caption ?? "📸 Schedina originale",
       parse_mode: "Markdown",
     });
-  } catch (error) {
-    console.error("Error sending image to Telegram: ", error);
+  } catch (error: any) {
+    console.error("Error sending image to Telegram: ", error.message);
     throw new Error("Unable to send image to Telegram.");
   }
 };
