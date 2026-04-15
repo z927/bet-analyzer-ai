@@ -1,10 +1,9 @@
 import { Router, Request, Response } from "express";
 import { analyzeBet } from "../services/analyzer-service";
-import { sendTelegramChannelMessageWithImage } from "../services/telegram-service";
-import multer from "multer";
-import "dotenv/config";
 import { AnalyzerOutput } from "../types/common";
 import { isTelegramValidationError } from "../utils/validator";
+import multer from "multer";
+import "dotenv/config";
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -19,17 +18,10 @@ analyzeRouter.post(
       console.log("Received file: ", req.file);
 
       if (!req.file) {
-        return res.status(400).json({ error: "File mancante." });
+        return res.status(400).json({ error: "Missing File." });
       }
 
       const analysis = await analyzeBet(req.file.buffer, req.file.mimetype);
-
-      await sendTelegramChannelMessageWithImage(
-        req.query.channel,
-        analysis,
-        req.file.buffer,
-        req.file.mimetype
-      );
 
       return res.status(200).json(analysis);
     } catch (error) {
@@ -38,7 +30,7 @@ analyzeRouter.post(
       }
 
       console.error("Errore nel router: ", error);
-      return res.status(500).json({ error: "Errore interno." });
+      return res.status(500).json({ error: "Generic Error." });
     }
   }
 );

@@ -33,10 +33,7 @@ export const parseAnalyzerOutput = (payload: unknown): AnalyzerOutput => {
     payload !== null &&
     typeof parsedPayload.bookmaker === "string" &&
     typeof parsedPayload.date === "string" &&
-    typeof parsedPayload.stake === "string" &&
-    typeof parsedPayload.potentialWin === "string" &&
     typeof parsedPayload.totalOdds === "string" &&
-    typeof parsedPayload.status === "string" &&
     Array.isArray(parsedPayload.selections) &&
     parsedPayload.selections.every(isAnalyzerSelection)
   ) {
@@ -54,7 +51,6 @@ const isAnalyzerSelection = (
   return (
     typeof selection.event === "string" &&
     typeof selection.selection === "string" &&
-    typeof selection.odds === "string" &&
-    typeof selection.result === "string"
+    typeof selection.odds === "string"
   );
 };

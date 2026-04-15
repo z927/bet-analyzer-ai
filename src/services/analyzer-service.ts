@@ -60,7 +60,10 @@ const getPrompt = (): string | null => {
 };
 
 const extractJsonObject = (text: string): AnalyzerOutput => {
-  const cleanedText = text.trim().replace(/^```json\s*/i, "").replace(/```$/i, "");
+  const cleanedText = text
+    .trim()
+    .replace(/^```json\s*/i, "")
+    .replace(/```$/i, "");
 
   try {
     const parsedJson = JSON.parse(cleanedText) as AnalyzerOutput;
@@ -85,17 +88,13 @@ const isAnalyzerOutput = (data: unknown): data is AnalyzerOutput => {
   return (
     typeof parsedData.bookmaker === "string" &&
     typeof parsedData.date === "string" &&
-    typeof parsedData.stake === "string" &&
-    typeof parsedData.potentialWin === "string" &&
     typeof parsedData.totalOdds === "string" &&
-    typeof parsedData.status === "string" &&
     Array.isArray(parsedData.selections) &&
     parsedData.selections.every(
       (item) =>
         typeof item.event === "string" &&
         typeof item.selection === "string" &&
-        typeof item.odds === "string" &&
-        typeof item.result === "string"
+        typeof item.odds === "string"
     )
   );
 };

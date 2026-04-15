@@ -18,16 +18,12 @@ Return only a valid JSON object (no markdown fences, no comments, no explanatory
 {
   "bookmaker": "String",
   "date": "DD/MM/YYYY",
-  "stake": "0.00€",
-  "potentialWin": "0.00€",
   "totalOdds": "0.00",
-  "status": "pending",
   "selections": [
     {
       "event": "Team A vs Team B",
       "selection": "Market Pick",
-      "odds": "0.00",
-      "result": "pending"
+      "odds": "0.00"
     }
   ]
 }

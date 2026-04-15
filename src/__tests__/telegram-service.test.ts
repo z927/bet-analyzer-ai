@@ -2,7 +2,7 @@ import TelegramBot from "node-telegram-bot-api";
 import {
   formatTelegramMessage,
   sendImage,
-  sendTelegramChannelMessageWithImage,
+  sendTelegramChannelMessage,
 } from "../services/telegram-service";
 import { AnalyzerOutput } from "../types/common";
 
@@ -15,16 +15,12 @@ describe("formatTelegramMessage", () => {
     const output: AnalyzerOutput = {
       bookmaker: "Bookmaker X",
       date: "2026-04-13",
-      stake: "€10",
-      potentialWin: "€45",
       totalOdds: "4.5",
-      status: "OPEN",
       selections: [
         {
           event: "Team A vs Team B",
           selection: "Team A vince",
           odds: "1.8",
-          result: "PENDING",
         },
       ],
     };
@@ -49,18 +45,12 @@ describe("sendImage", () => {
     const sendPhoto = jest.fn().mockResolvedValue(undefined);
     mockedTelegramBot.mockImplementation(() => ({ sendPhoto }));
 
-    await sendImage(
-      "public",
-      Buffer.from("img"),
-      "image/png",
-      "*caption markdown*"
-    );
+    await sendImage("public", Buffer.from("img"), "*caption markdown*");
 
     expect(sendPhoto).toHaveBeenCalledWith(
       "@public_channel",
       expect.any(Buffer),
       expect.objectContaining({
-        contentType: "image/png",
         caption: "*caption markdown*",
         parse_mode: "Markdown",
       })
@@ -83,26 +73,17 @@ describe("sendTelegramChannelMessageWithImage", () => {
     const output: AnalyzerOutput = {
       bookmaker: "Bookmaker X",
       date: "2026-04-13",
-      stake: "€10",
-      potentialWin: "€45",
       totalOdds: "4.5",
-      status: "OPEN",
       selections: [
         {
           event: "Team A vs Team B",
           selection: "Team A vince",
           odds: "1.8",
-          result: "PENDING",
         },
       ],
     };
 
-    await sendTelegramChannelMessageWithImage(
-      "public",
-      output,
-      Buffer.from("img"),
-      "image/jpeg"
-    );
+    await sendTelegramChannelMessage("public", output, Buffer.from("img"));
 
     expect(sendMessage).toHaveBeenCalledTimes(0);
     expect(sendPhoto).toHaveBeenCalledTimes(1);
