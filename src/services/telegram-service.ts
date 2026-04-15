@@ -1,12 +1,14 @@
 import TelegramBot from "node-telegram-bot-api";
 import { AnalyzerOutput, ChannelType } from "../types/common";
-import { parseAnalyzerOutput, parseChannel } from "../utils/validator";
+import { parseChannel, parseAnalyzerOutput } from "../utils/validator";
 
 export const sendTelegramChannelMessage = async (
   channel: ChannelType,
-  analyzerOutput: unknown,
+  analyzerOutput: AnalyzerOutput,
   imageBuffer: Buffer
 ) => {
+  console.log(analyzerOutput);
+
   const channelType = parseChannel(channel);
   const parsedOutput = parseAnalyzerOutput(analyzerOutput);
   const text = formatTelegramMessage(parsedOutput);
@@ -21,7 +23,6 @@ export const formatTelegramMessage = (output: AnalyzerOutput): string => {
         `*${index + 1}\\. ${escapeMarkdown(selection.event)}*`,
         `   • Scelta: ${escapeMarkdown(selection.selection)}`,
         `   • Quota: ${escapeMarkdown(selection.odds)}`,
-        `   • Esito: ${escapeMarkdown(selection.result)}`,
       ].join("\n")
     )
     .join("\n\n");
@@ -31,10 +32,7 @@ export const formatTelegramMessage = (output: AnalyzerOutput): string => {
     "",
     `🏦 Bookmaker: *${escapeMarkdown(output.bookmaker)}*`,
     `📅 Data: ${escapeMarkdown(output.date)}`,
-    `💶 Stake: ${escapeMarkdown(output.stake)}`,
-    `💸 Vincita potenziale: ${escapeMarkdown(output.potentialWin)}`,
     `📈 Quota totale: ${escapeMarkdown(output.totalOdds)}`,
-    `📊 Stato: ${escapeMarkdown(output.status)}`,
     "",
     "🧾 *Dettaglio selezioni*",
     selectionsText,

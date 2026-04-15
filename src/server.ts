@@ -2,6 +2,7 @@ import express from "express";
 import actuator from "express-actuator";
 import analyzeRouter from "./routes/analyzer-route";
 import pingRouter from "./routes/ping-router";
+import telegramRouter from "./routes/telegram-route";
 import swaggerUi from "swagger-ui-express";
 import YAML from "yamljs";
 import path from "path";
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(actuator());
 app.use("/", pingRouter);
 app.use("/api/analyzer", analyzeRouter);
+app.use("/api/telegram", telegramRouter);
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(PORT, () => {

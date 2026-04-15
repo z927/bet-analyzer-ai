@@ -15,16 +15,12 @@ describe("formatTelegramMessage", () => {
     const output: AnalyzerOutput = {
       bookmaker: "Bookmaker X",
       date: "2026-04-13",
-      stake: "€10",
-      potentialWin: "€45",
       totalOdds: "4.5",
-      status: "OPEN",
       selections: [
         {
           event: "Team A vs Team B",
           selection: "Team A vince",
           odds: "1.8",
-          result: "PENDING",
         },
       ],
     };
@@ -77,16 +73,12 @@ describe("sendTelegramChannelMessageWithImage", () => {
     const output: AnalyzerOutput = {
       bookmaker: "Bookmaker X",
       date: "2026-04-13",
-      stake: "€10",
-      potentialWin: "€45",
       totalOdds: "4.5",
-      status: "OPEN",
       selections: [
         {
           event: "Team A vs Team B",
           selection: "Team A vince",
           odds: "1.8",
-          result: "PENDING",
         },
       ],
     };
