@@ -5,7 +5,7 @@ export interface GenerativePart {
   };
 }
 
-export type ChannelType = "public" | "premium";
+export type ChannelType = "public" | "premium" | "private";
 
 export interface AnalyzerSelection {
   event: string;

@@ -16,29 +16,6 @@ export const sendTelegramChannelMessage = async (
   await sendImage(channelType, imageBuffer, text);
 };
 
-export const formatTelegramMessage = (output: AnalyzerOutput): string => {
-  const selectionsText = output.selections
-    .map((selection, index) =>
-      [
-        `*${index + 1}\\. ${escapeMarkdown(selection.event)}*`,
-        `   • Scelta: ${escapeMarkdown(selection.selection)}`,
-        `   • Quota: ${escapeMarkdown(selection.odds)}`,
-      ].join("\n")
-    )
-    .join("\n\n");
-
-  return [
-    "🎯 *Giocata del giorno*",
-    "",
-    `🏦 Bookmaker: *${escapeMarkdown(output.bookmaker)}*`,
-    `📅 Data: ${escapeMarkdown(output.date)}`,
-    `📈 Quota totale: ${escapeMarkdown(output.totalOdds)}`,
-    "",
-    "🧾 *Dettaglio selezioni*",
-    selectionsText,
-  ].join("\n");
-};
-
 export const sendImage = async (
   channelType: ChannelType,
   imageBuffer: Buffer,
@@ -68,7 +45,33 @@ const chooseChannel = (channelType: ChannelType): string | undefined => {
   if (channelType === "premium") {
     return process.env.TELEGRAM_VIP_CHANNEL_ID || "";
   }
+  if (channelType === "private") {
+    return process.env.TELEGRAM_PRIVATE_CHANNEL_ID;
+  }
   throw new Error("Invalid channel type provided.");
+};
+
+export const formatTelegramMessage = (output: AnalyzerOutput): string => {
+  const selectionsText = output.selections
+    .map((selection, index) =>
+      [
+        `*${index + 1}\\. ${escapeMarkdown(selection.event)}*`,
+        `   • Scelta: ${escapeMarkdown(selection.selection)}`,
+        `   • Quota: ${escapeMarkdown(selection.odds)}`,
+      ].join("\n")
+    )
+    .join("\n\n");
+
+  return [
+    "🎯 *Giocata del giorno*",
+    "",
+    `🏦 Bookmaker: *${escapeMarkdown(output.bookmaker)}*`,
+    `📅 Data: ${escapeMarkdown(output.date)}`,
+    `📈 Quota totale: ${escapeMarkdown(output.totalOdds)}`,
+    "",
+    "🧾 *Dettaglio selezioni*",
+    selectionsText,
+  ].join("\n");
 };
 
 const escapeMarkdown = (value: string): string => {
