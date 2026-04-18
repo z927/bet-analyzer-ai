@@ -1,5 +1,6 @@
 import TelegramBot from "node-telegram-bot-api";
 import {
+  detectBetType,
   formatTelegramMessage,
   sendImage,
   sendTelegramChannelMessage,
@@ -29,8 +30,39 @@ describe("formatTelegramMessage", () => {
 
     expect(result).toContain("🎯 *Giocata del giorno*");
     expect(result).toContain("🧾 *Dettaglio Eventi*");
+    expect(result).toContain("🎲 Tipo: *singola*");
     expect(result).toContain("Bookmaker X");
     expect(result).toContain("Team A vs Team B");
+  });
+
+  it("escapes markdown special characters using MarkdownV2 format", () => {
+    const output: AnalyzerOutput = {
+      bookmaker: "Bookmaker_(X)",
+      date: "2026-04-13",
+      totalOdds: "4.5",
+      selections: [
+        {
+          event: "Team [A] vs Team_B",
+          selection: "Over 2.5!",
+          odds: "1.8",
+        },
+      ],
+    };
+
+    const result = formatTelegramMessage(output);
+
+    expect(result).toContain("Bookmaker\\_\\(X\\)");
+    expect(result).toContain("Team \\[A\\] vs Team\\_B");
+    expect(result).toContain("Over 2\\.5\\!");
+  });
+});
+
+describe("detectBetType", () => {
+  it("returns bet type based on number of selections", () => {
+    expect(detectBetType(1)).toBe("singola");
+    expect(detectBetType(2)).toBe("double");
+    expect(detectBetType(3)).toBe("triple");
+    expect(detectBetType(4)).toBe("multipla");
   });
 });
 
@@ -52,7 +84,7 @@ describe("sendImage", () => {
       expect.any(Buffer),
       expect.objectContaining({
         caption: "*caption markdown*",
-        parse_mode: "Markdown",
+        parse_mode: "MarkdownV2",
       })
     );
   });
@@ -92,7 +124,7 @@ describe("sendTelegramChannelMessageWithImage", () => {
       "@public_channel",
       expect.any(Buffer),
       expect.objectContaining({
-        parse_mode: "Markdown",
+        parse_mode: "MarkdownV2",
         caption: expect.stringContaining("🎯 *Giocata del giorno*"),
       })
     );

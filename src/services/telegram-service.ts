@@ -1,5 +1,5 @@
 import TelegramBot from "node-telegram-bot-api";
-import { AnalyzerOutput, ChannelType } from "../types/common";
+import { AnalyzerOutput, BetType, ChannelType } from "../types/common";
 import { parseChannel, parseAnalyzerOutput } from "../utils/validator";
 
 export const sendTelegramChannelMessage = async (
@@ -30,7 +30,7 @@ export const sendImage = async (
 
     await bot.sendPhoto(channelId ?? "", imageBuffer, {
       caption: caption ?? "📸 Schedina originale",
-      parse_mode: "Markdown",
+      parse_mode: "MarkdownV2",
     });
   } catch (error: any) {
     console.error("Error sending image to Telegram: ", error.message);
@@ -52,6 +52,7 @@ const chooseChannel = (channelType: ChannelType): string | undefined => {
 };
 
 export const formatTelegramMessage = (output: AnalyzerOutput): string => {
+  const betType = detectBetType(output.selections.length);
   const selectionsText = output.selections
     .map((selection, index) =>
       [
@@ -67,11 +68,25 @@ export const formatTelegramMessage = (output: AnalyzerOutput): string => {
     "",
     `🏦 Bookmaker: *${escapeMarkdown(output.bookmaker)}*`,
     `📅 Data: ${escapeMarkdown(output.date)}`,
+    `🎲 Tipo: *${escapeMarkdown(betType)}*`,
     `📈 Quota totale: ${escapeMarkdown(output.totalOdds)}`,
     "",
-    "🧾 *Dettaglio eventi*",
+    "🧾 *Dettaglio Eventi*",
     selectionsText,
   ].join("\n");
+};
+
+export const detectBetType = (selectionCount: number): BetType => {
+  if (selectionCount <= 1) {
+    return "singola";
+  }
+  if (selectionCount === 2) {
+    return "double";
+  }
+  if (selectionCount === 3) {
+    return "triple";
+  }
+  return "multipla";
 };
 
 const escapeMarkdown = (value: string): string => {
