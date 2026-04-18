@@ -19,3 +19,5 @@ export interface AnalyzerOutput {
   totalOdds: string;
   selections: AnalyzerSelection[];
 }
+
+export type BetType = "singola" | "double" | "triple" | "multipla";
