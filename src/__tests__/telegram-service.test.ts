@@ -28,7 +28,7 @@ describe("formatTelegramMessage", () => {
     const result = formatTelegramMessage(output);
 
     expect(result).toContain("🎯 *Giocata del giorno*");
-    expect(result).toContain("🧾 *Dettaglio selezioni*");
+    expect(result).toContain("🧾 *Dettaglio Eventi*");
     expect(result).toContain("Bookmaker X");
     expect(result).toContain("Team A vs Team B");
   });

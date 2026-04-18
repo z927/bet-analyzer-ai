@@ -43,7 +43,7 @@ const chooseChannel = (channelType: ChannelType): string | undefined => {
     return process.env.TELEGRAM_PUBLIC_CHANNEL_ID;
   }
   if (channelType === "premium") {
-    return process.env.TELEGRAM_VIP_CHANNEL_ID || "";
+    return process.env.TELEGRAM_VIP_CHANNEL_ID;
   }
   if (channelType === "private") {
     return process.env.TELEGRAM_PRIVATE_CHANNEL_ID;
@@ -69,7 +69,7 @@ export const formatTelegramMessage = (output: AnalyzerOutput): string => {
     `📅 Data: ${escapeMarkdown(output.date)}`,
     `📈 Quota totale: ${escapeMarkdown(output.totalOdds)}`,
     "",
-    "🧾 *Dettaglio selezioni*",
+    "🧾 *Dettaglio eventi*",
     selectionsText,
   ].join("\n");
 };
