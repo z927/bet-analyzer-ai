@@ -20,4 +20,4 @@ export interface AnalyzerOutput {
   selections: AnalyzerSelection[];
 }
 
-export type BetType = "singola" | "double" | "triple" | "multipla";
+export type BetType = "Singola" | "Doppia" | "Tripla" | "Multipla";

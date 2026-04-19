@@ -30,7 +30,7 @@ describe("formatTelegramMessage", () => {
 
     expect(result).toContain("🎯 *Giocata del giorno*");
     expect(result).toContain("🧾 *Dettaglio Eventi*");
-    expect(result).toContain("🎲 Tipo: *singola*");
+    expect(result).toContain("🎲 Tipo: *Singola*");
     expect(result).toContain("Bookmaker X");
     expect(result).toContain("Team A vs Team B");
   });
@@ -59,10 +59,10 @@ describe("formatTelegramMessage", () => {
 
 describe("detectBetType", () => {
   it("returns bet type based on number of selections", () => {
-    expect(detectBetType(1)).toBe("singola");
-    expect(detectBetType(2)).toBe("double");
-    expect(detectBetType(3)).toBe("triple");
-    expect(detectBetType(4)).toBe("multipla");
+    expect(detectBetType(1)).toBe("Singola");
+    expect(detectBetType(2)).toBe("Doppia");
+    expect(detectBetType(3)).toBe("Tripla");
+    expect(detectBetType(4)).toBe("Multipla");
   });
 });
 

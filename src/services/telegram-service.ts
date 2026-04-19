@@ -78,15 +78,15 @@ export const formatTelegramMessage = (output: AnalyzerOutput): string => {
 
 export const detectBetType = (selectionCount: number): BetType => {
   if (selectionCount <= 1) {
-    return "singola";
+    return "Singola";
   }
   if (selectionCount === 2) {
-    return "double";
+    return "Doppia";
   }
   if (selectionCount === 3) {
-    return "triple";
+    return "Tripla";
   }
-  return "multipla";
+  return "Multipla";
 };
 
 const escapeMarkdown = (value: string): string => {

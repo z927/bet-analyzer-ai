@@ -15,13 +15,17 @@ export const isTelegramValidationError = (
   return error instanceof TelegramValidationError;
 };
 
+const isValidChannel = (channel: any): channel is ChannelType => {
+  return ["public", "premium", "private"].includes(channel);
+};
+
 export const parseChannel = (channel: unknown): ChannelType => {
-  if (channel === "public" || channel === "premium") {
+  if (isValidChannel(channel)) {
     return channel;
   }
 
   throw new TelegramValidationError(
-    "Invalid channel query parameter. Use 'public' or 'premium'."
+    "Invalid channel query parameter. Use 'public', 'premium' or 'private'."
   );
 };
 
