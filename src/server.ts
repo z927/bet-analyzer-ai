@@ -1,5 +1,6 @@
 import express from "express";
 import actuator from "express-actuator";
+import cors from "cors";
 import analyzeRouter from "./routes/analyzer-route";
 import pingRouter from "./routes/ping-router";
 import telegramRouter from "./routes/telegram-route";
@@ -13,6 +14,7 @@ const swaggerDocument = YAML.load(
 const PORT: string | number = process.env.PORT || 8080;
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(actuator());
 app.use("/", pingRouter);
