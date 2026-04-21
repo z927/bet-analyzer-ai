@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@types/async-retry": "^1.4.9",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
     "@types/express-actuator": "^1.8.3",
     "@types/jest": "^30.0.0",
